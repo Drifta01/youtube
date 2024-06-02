@@ -1,48 +1,16 @@
-import shutil
-import subprocess
-from setuptools import setup, Command
+from setuptools import setup, find_packages
 
-
-class BuildCommand(Command):
-    description = "Build the project using PyInstaller"
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        subprocess.run(
-            [
-                "pyinstaller",
-                "--noconfirm",
-                "main.py",
-                "-F",
-                "--windowed",
-                "-n",
-                "Youtube Downloader",
-            ]
-        )
-        shutil.copytree(
-            "dist/Youtube Downloader.app",
-            "/Applications/Youtube Downloader.app",
-            dirs_exist_ok=True,
-        )
-
+with open("requirements.txt") as f:
+    requirements = f.read().splitlines()
 
 setup(
-    name="YouTubeDL",
+    name="YouTube Downloader",
     version="0.2",
-    author="David Poole",
-    description="A simple YouTube video downloader",
-    packages=[],
-    install_requires=["pytube"],
+    packages=find_packages(),
+    install_requires=requirements,
     entry_points={
-        "console_scripts": ["downloader = main:main"],
-    },
-    cmdclass={
-        "build": BuildCommand,
+        "console_scripts": [
+            "ytdl = youtube_downloader.main:main",
+        ],
     },
 )
