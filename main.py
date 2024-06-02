@@ -1,9 +1,4 @@
-from gui import create_gui
-
-
-def main():
-    root = create_gui()
-    root.mainloop()
+from youtube_downloader.main import main
 
 
 if __name__ == "__main__":

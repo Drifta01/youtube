@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from yt import download_yt_video
+from .yt import download_yt_video
 
 
 def create_gui():
