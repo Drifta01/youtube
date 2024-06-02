@@ -3,13 +3,14 @@ from tkinter import messagebox
 from pytube import YouTube
 
 
-def download_yt_video(url):
+def download_yt_video(url, res):
     yt = YouTube(url)
 
     try:
         yt.check_availability()
         streams = yt.streams
-        video = streams.filter(res="480p").first()
+        print(streams)
+        video = streams.filter(res=res).first()
 
         print(f"Downloading {video.title}")
         downloads_folder = os.path.expanduser("~/Downloads")
