@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from .yt import download_yt_video
+from .yt import YouTubeDownloader
 
 
 class YouTubeDownloaderGUI:
@@ -60,13 +60,11 @@ class YouTubeDownloaderGUI:
         url = self.url_entry.get()
         res = self.resolution_var.get()
 
-        try:
-            if download_yt_video(url, res):
-                messagebox.showinfo("Download", "Video downloaded successfully.")
-            else:
-                messagebox.showerror("Error", "Failed to download the video.")
-        except Exception as e:
-            messagebox.showerror("Error", f"An error occurred: {str(e)}")
+        downloader = YouTubeDownloader(url, res)
+        if downloader.run():
+            messagebox.showinfo("Download", "Video downloaded successfully.")
+        else:
+            messagebox.showerror("Error", "Failed to download the video.")
 
 
 def create_gui():
