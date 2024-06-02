@@ -29,7 +29,7 @@ class YouTubeDownloaderGUI:
         resolution_label.grid(row=1, column=0, padx=10, pady=10)
 
         self.resolution_var = tk.StringVar()
-        self.resolution_var.set("480p")  # default value
+        self.resolution_var.set("720p")  # default value
 
         resolution_480p = tk.Radiobutton(
             self.root, text="480p", variable=self.resolution_var, value="480p"
@@ -54,7 +54,10 @@ class YouTubeDownloaderGUI:
 
     def paste_from_clipboard(self):
         self.url_entry.delete(0, tk.END)
-        self.url_entry.insert(0, self.root.clipboard_get())
+        try:
+            self.url_entry.insert(0, self.root.clipboard_get())
+        except tk.TclError:
+            print("Failed to paste from clipboard.")
 
     def download_video(self):
         url = self.url_entry.get()
