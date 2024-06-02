@@ -14,7 +14,8 @@ def create_gui():
     entry.pack()
 
     def paste_from_clipboard():
-        entry.insert(tk.END, root.clipboard_get())
+        entry.delete(0, tk.END)
+        entry.insert(0, root.clipboard_get())
 
     entry.bind("<Control-v>", lambda event: paste_from_clipboard())
 
