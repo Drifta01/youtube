@@ -1,3 +1,4 @@
+import shutil
 import subprocess
 from setuptools import setup, Command
 
@@ -14,7 +15,20 @@ class BuildCommand(Command):
 
     def run(self):
         subprocess.run(
-            ["pyinstaller", "main.py", "-F", "--windowed", "-n", "Youtube Downloader"]
+            [
+                "pyinstaller",
+                "--noconfirm",
+                "main.py",
+                "-F",
+                "--windowed",
+                "-n",
+                "Youtube Downloader",
+            ]
+        )
+        shutil.copytree(
+            "dist/Youtube Downloader.app",
+            "/Applications/Youtube Downloader.app",
+            dirs_exist_ok=True,
         )
 
 
