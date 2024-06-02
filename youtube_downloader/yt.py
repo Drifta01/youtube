@@ -1,24 +1,21 @@
 import os
-from tkinter import messagebox
 from pytube import YouTube
 
 
-def download_yt_video(url, res):
+def download_yt_video(url, res, output_path=None):
     yt = YouTube(url)
 
     try:
         yt.check_availability()
         streams = yt.streams
-        print(streams)
         video = streams.filter(res=res).first()
 
-        print(f"Downloading {video.title}")
-        downloads_folder = os.path.expanduser("~/Downloads")
-        video.download(output_path=downloads_folder, skip_existing=True)
+        if not output_path:
+            output_path = os.path.expanduser("~/Downloads")
 
-        print("Download complete!")
-        messagebox.showinfo("Success", "Download completed successfully!")
+        video.download(output_path=output_path, skip_existing=True)
+        return True
 
     except Exception as e:
         print(e)
-        messagebox.showerror("Error", str(e))
+        return False
