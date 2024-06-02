@@ -26,10 +26,23 @@ class YouTubeDownloader:
         return self.output_path
 
     def download_video(self):
-        video = self.filter_stream()
+        def on_progress(stream, chunk, bytes_remaining):
+            total_size = stream.filesize
+            bytes_downloaded = total_size - bytes_remaining
+            percentage_of_completion = bytes_downloaded / total_size * 100
+            print(f"Download Progress: {percentage_of_completion:.2f}%")
+
+        yt = YouTube(self.url, on_progress_callback=on_progress)
+
+        video = yt.streams.filter(res=self.res).first()
+        print(f"Downloading...{video.title}")
         video.download(output_path=self.get_output_path(), skip_existing=True)
+        print("Download completed!")
 
     def run(self):
+        if not self.url:
+            print("no url")
+            return False
         try:
             self.check_availability()
             self.download_video()
