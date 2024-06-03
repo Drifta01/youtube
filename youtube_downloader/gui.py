@@ -1,5 +1,7 @@
 import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox
+
 from .yt import YouTubeDownloader
 
 
@@ -22,7 +24,7 @@ class YouTubeDownloaderGUI:
         paste_button = tk.Button(
             self.root, text="Paste URL", command=self.paste_from_clipboard
         )
-        paste_button.grid(row=0, column=2, padx=10, pady=10)
+        paste_button.grid(row=0, column=2, padx=10, pady=10, sticky="w")
 
         # Create resolution label and radio buttons
         resolution_label = tk.Label(self.root, text="Choose resolution:")
@@ -32,25 +34,33 @@ class YouTubeDownloaderGUI:
         self.resolution_var.set("720p")  # default value
 
         resolution_480p = tk.Radiobutton(
-            self.root, text="480p", variable=self.resolution_var, value="480p"
+            self.root,
+            text="480p",
+            variable=self.resolution_var,
+            value="480p",
         )
-        resolution_480p.grid(row=1, column=1, padx=10, pady=0)
+        resolution_480p.grid(row=1, column=1, padx=10, pady=0, sticky="w")
 
         resolution_720p = tk.Radiobutton(
             self.root, text="720p", variable=self.resolution_var, value="720p"
         )
-        resolution_720p.grid(row=2, column=1, padx=10, pady=0)
+        resolution_720p.grid(row=2, column=1, padx=10, pady=0, sticky="w")
 
         resolution_1080p = tk.Radiobutton(
             self.root, text="1080p", variable=self.resolution_var, value="1080p"
         )
-        resolution_1080p.grid(row=3, column=1, padx=10, pady=10)
+        resolution_1080p.grid(row=3, column=1, padx=10, pady=10, sticky="w")
 
         # Create Download button
         download_button = tk.Button(
             self.root, text="Download", command=self.download_video
         )
         download_button.grid(row=1, column=2, columnspan=3, padx=10, pady=10)
+
+        self.progress_bar = ttk.Progressbar(
+            self.root, orient="horizontal", length=300, mode="determinate"
+        )
+        self.progress_bar.grid(row=4, column=0, columnspan=3, padx=10, pady=10)
 
     def paste_from_clipboard(self):
         self.url_entry.delete(0, tk.END)
@@ -64,8 +74,11 @@ class YouTubeDownloaderGUI:
         res = self.resolution_var.get()
 
         downloader = YouTubeDownloader(url, res)
+        downloader.progress_bar = self.progress_bar
+
         if downloader.run():
-            messagebox.showinfo("Download", "Video downloaded successfully.")
+            messagebox.showinfo("Download", "Video downloading...")
+            self.url_entry.delete(0, tk.END)
         else:
             messagebox.showerror("Error", "Failed to download the video.")
 
@@ -73,7 +86,7 @@ class YouTubeDownloaderGUI:
 def create_gui():
     root = tk.Tk()
 
-    window_height = 180
+    window_height = 200
     window_width = 500
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()

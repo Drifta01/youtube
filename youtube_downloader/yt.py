@@ -1,3 +1,4 @@
+import threading
 import os
 from pytube import YouTube
 
@@ -27,6 +28,8 @@ class YouTubeDownloader:
         total_size = stream.filesize
         bytes_downloaded = total_size - bytes_remaining
         percentage_of_completion = bytes_downloaded / total_size * 100
+        self.progress_bar["value"] = percentage_of_completion
+
         print(
             "█" * int(percentage_of_completion / 2)
             + " " * (50 - int(percentage_of_completion / 2)),
@@ -37,7 +40,7 @@ class YouTubeDownloader:
     def download_video(self):
         video = self.filter_stream()
 
-        print(f"Downloading...{video.title}")
+        print(f"Downloading... {video.title}")
         video.download(output_path=self.get_output_path(), skip_existing=True)
         print("Download completed!")
 
@@ -47,7 +50,8 @@ class YouTubeDownloader:
             return False
         try:
             self.check_availability()
-            self.download_video()
+            thread = threading.Thread(target=self.download_video)
+            thread.start()
             return True
         except Exception as e:
             print(e)
